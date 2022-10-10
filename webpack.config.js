@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const autoprefixer = require('autoprefixer');
 
 module.exports = function (_env, argv) {
     const isProduction = argv.mode === "production";
@@ -39,6 +40,40 @@ module.exports = function (_env, argv) {
                     ]
                 },
                 {
+                    test: /\.s[ac]ss$/,
+                    use: [
+                        isProduction ? MiniCssExtractPlugin.loader : "style-loader",
+                        {
+                            loader: "css-loader",
+                            options: {
+                                importLoaders: 3
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                postcssOptions: {
+                                    plugins: [
+                                        autoprefixer()
+                                    ]
+                                }
+                            }
+                        },
+                        "resolve-url-loader",
+                        {
+                            loader: "sass-loader",
+                            options: {
+                                sourceMap: true,
+                                sassOptions: {
+                                    includePaths: ['./node_modules']
+                                },
+                                // Prefer Dart Sass
+                                implementation: require('sass'),
+                            }
+                        }
+                    ]
+                },
+                {
                     test: /\.(png|jpg|gif)$/i,
                     use: {
                         loader: "url-loader",
@@ -66,7 +101,7 @@ module.exports = function (_env, argv) {
         },
         plugins: [
             isProduction && new MiniCssExtractPlugin({
-                filename: "assests/css/[name].[contenthash:8].css",
+                filename: "assets/css/[name].[contenthash:8].css",
                 chunkFilename: "assets/css/[name].[contenthash:8].chunk.css"
             }),
             new webpack.DefinePlugin({

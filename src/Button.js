@@ -20,7 +20,7 @@ const Button = (props) => {
         //     <span className="mdc-button__ripple"></span>
         //     <span className="mdc-button__label">Text Button</span>
         // </button>
-        <button ref={buttonEl} className="mdc-button mdc-button--raised">
+        <button ref={buttonEl} className="mdc-button mdc-button--raised table-button">
             <span className="mdc-button__ripple"></span>
             <span className="mdc-button__label">{text}</span>
         </button>
